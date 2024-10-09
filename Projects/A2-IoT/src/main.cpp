@@ -63,11 +63,10 @@ void setup()
 void loop()
 {
     ei_printf("Starting inferencing in 2 seconds...\n");
-
+    myDisplay->inferenceStartInfo(2);
     delay(2000);
-
+    myDisplay->recordInfo();
     ei_printf("Recording...\n");
-
     bool m = microphone_inference_record();
     if (!m) {
         ei_printf("ERR: Failed to record audio...\n");
@@ -218,6 +217,8 @@ void print_inference_result(ei_impulse_result_t result) {
     } else {
         myDisplay->unknown();
     }
+
+    delay(3000);
 
     // Print anomaly result (if it exists)
 #if EI_CLASSIFIER_HAS_ANOMALY == 1
