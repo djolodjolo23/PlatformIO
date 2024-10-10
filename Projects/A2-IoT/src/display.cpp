@@ -67,9 +67,16 @@ void display::recordInfo() {
     u8g2.sendBuffer();
 }
 
+void display::recordingDone() {
+    clearScreen();
+    u8g2.setFont(u8g2_font_ncenB08_tr);
+    drawWrappedText("Recording done!", 64, 124);
+    u8g2.sendBuffer();
+}
+
 void display::spaghetti() {
     clearScreen();
-    u8g2.drawXBM(24, 10, 76, 76, spaghetti_oled_image_76x76);
+    u8g2.drawXBM(24, 0, 76, 76, spaghetti_oled_image_76x76);
     //draw text
     u8g2.setFont(u8g2_font_ncenB08_tr);
     drawWrappedText("You ordered Spaghetti! Comming soon!", 90, 124);
@@ -79,7 +86,7 @@ void display::spaghetti() {
 
 void display::unknown() {
     clearScreen();
-    u8g2.drawXBM(24, 10, 76, 76, unknown_oled_image_76x76);
+    u8g2.drawXBM(24, 0, 76, 76, unknown_oled_image_76x76);
     u8g2.setFont(u8g2_font_ncenB08_tr);
     drawWrappedText("Unknown food! Please try again.", 90, 124);
 
@@ -89,7 +96,7 @@ void display::unknown() {
 
 void display::hamburger() {
     clearScreen();
-    u8g2.drawXBM(24, 10, 76, 76, burger_oled_image_76x76);
+    u8g2.drawXBM(24, 0, 76, 76, burger_oled_image_76x76);
     u8g2.setFont(u8g2_font_ncenB08_tr);
     drawWrappedText("You ordered Hamburger! Comming soon!", 90, 124);
     u8g2.sendBuffer();
@@ -97,8 +104,21 @@ void display::hamburger() {
 
 void display::biryani() {
     clearScreen();
-    u8g2.drawXBM(24, 10, 76, 76, biryani_oled_image_76x76);
+    u8g2.drawXBM(24, 0, 76, 76, biryani_oled_image_76x76);
     u8g2.setFont(u8g2_font_ncenB08_tr);
     drawWrappedText("You ordered Biryani! Comming soon!", 90, 124);
     u8g2.sendBuffer();
+}
+
+void display::drawImage(String imageName) {
+    clearScreen();
+    if (imageName == "hamburger") {
+        hamburger();
+    } else if (imageName == "biryani") {
+        biryani();
+    } else if (imageName == "spaghetti") {
+        spaghetti();
+    } else {
+        unknown();
+    }
 }

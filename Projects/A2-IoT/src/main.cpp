@@ -72,7 +72,7 @@ void loop()
         ei_printf("ERR: Failed to record audio...\n");
         return;
     }
-
+    myDisplay->recordingDone();
     ei_printf("Recording done\n");
 
     signal_t signal;
@@ -208,11 +208,11 @@ void print_inference_result(ei_impulse_result_t result) {
         ei_printf("  %s: ", ei_classifier_inferencing_categories[i]);
         ei_printf("%.5f\r\n", result.classification[i].value);
     }
-    if (result.classification[0].value > 0.7) {
+    if (result.classification[0].value > 0.5) {
         myDisplay->biryani();
-    } else if (result.classification[1].value > 0.7) {
+    } else if (result.classification[1].value > 0.5) {
         myDisplay->hamburger();
-    } else if (result.classification[2].value > 0.7) {
+    } else if (result.classification[2].value > 0.5) {
         myDisplay->spaghetti();
     } else {
         myDisplay->unknown();

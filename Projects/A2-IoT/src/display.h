@@ -15,12 +15,14 @@ class display {
 
         void clearArea();
         void clearScreen();
+        void drawImage(String imageName);
         void hamburger();
         void biryani();
         void spaghetti();
         void unknown();
         void inferenceStartInfo(int sec);
         void recordInfo();
+        void recordingDone();
         void drawCenteredText(const char *text, int y);
         void drawWrappedText(const char *text, int y, int maxWidth);
 };
