@@ -80,7 +80,7 @@ __attribute__((unused)) static const char *EI_RESIZE_STRINGS[] = { "none", "fit-
 #define EI_CLASSIFIER_PROJECT_ID                 532977
 #define EI_CLASSIFIER_PROJECT_OWNER              "Darun Khourshid"
 #define EI_CLASSIFIER_PROJECT_NAME               "CloudXplorers"
-#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     4
+#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     6
 #define EI_CLASSIFIER_NN_INPUT_FRAME_SIZE        1950
 #define EI_CLASSIFIER_RAW_SAMPLE_COUNT           48000
 #define EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME      1
