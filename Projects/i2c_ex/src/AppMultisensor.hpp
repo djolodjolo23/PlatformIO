@@ -13,7 +13,7 @@ namespace app{
     class AppMultisensor
     {
     private:
-        tsl2561_t m_light_sensor;
+        tsl2591_t m_light_sensor;
         bmp280_t m_temp_sensor;
         bmp280_params_t m_bmp280_params;
     public:
