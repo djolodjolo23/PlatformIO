@@ -210,12 +210,19 @@ void print_inference_result(ei_impulse_result_t result) {
         ei_printf("%.5f\r\n", result.classification[i].value);
     }
     if (result.classification[0].value > 0.6) {
+    if (result.classification[0].value > 0.7) {
+        ei_printf("You said Biryani\n");
         myDisplay->biryani();
     } else if (result.classification[1].value > 0.6) {
+    } else if (result.classification[1].value > 0.7) {
+        ei_printf("You said Hamburger\n");
         myDisplay->hamburger();
     } else if (result.classification[2].value > 0.6) {
+    } else if (result.classification[2].value > 0.7) {
+        ei_printf("You said Spaghetti\n");
         myDisplay->spaghetti();
     } else {
+        ei_printf("Unknown food\n");
         myDisplay->unknown();
     }
 

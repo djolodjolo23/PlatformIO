@@ -130,7 +130,7 @@ const ei_impulse_t impulse_532977_0 = {
     .project_name = "CloudXplorers",
     .impulse_id = 1,
     .impulse_name = "Impulse #1",
-    .deploy_version = 4,
+    .deploy_version = 6,
 
     .nn_input_frame_size = 1950,
     .raw_sample_count = 48000,
