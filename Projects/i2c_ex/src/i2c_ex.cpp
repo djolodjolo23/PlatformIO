@@ -6,10 +6,8 @@
 
 extern "C" void app_main(void) {
     // Delay for 10 seconds (or adjust as needed) before starting
+    printf("\nWaiting for 5 seconds before starting AppMultisensor...\n");
     vTaskDelay(5000 / portTICK_PERIOD_MS);
-
-    printf("Waiting for 10 seconds before starting AppMultisensor...\n");
-    vTaskDelay(10000 / portTICK_PERIOD_MS);
 
     printf("Starting AppMultisensor...\n");
     app::AppMultisensor multisensor;
@@ -20,7 +18,7 @@ extern "C" void app_main(void) {
         vTaskDelay(10000 / portTICK_PERIOD_MS);
         auto reading = multisensor.read();
 
-        ESP_LOGI(__func__, "pres: %.2f, temp: %.2f, hum: %.2f",
-                 reading.pressure, reading.temperature, reading.humidity);
+        ESP_LOGI(__func__, "lux: %.2f",
+                 reading.lux);
     }
 }
