@@ -2,6 +2,8 @@
 #include <Arduino.h>
 #include <a3_inferencing.h>
 #include <Arduino_LSM6DSOX.h> 
+#include <rgb_control.h>
+#include <WiFiNINA.h>
 
 enum sensor_status {
     NOT_USED = -1,
@@ -64,6 +66,7 @@ void setup()
 {
     /* Init serial */
     Serial.begin(115200);
+    initiateRgb();
     // comment out the below line to cancel the wait for USB connection (needed for native USB)
     while (!Serial);
     Serial.println("Edge Impulse Sensor Fusion Inference\r\n");
@@ -283,15 +286,20 @@ void print_inference_result(ei_impulse_result_t result) {
         ei_printf("  %s: ", ei_classifier_inferencing_categories[i]);
         ei_printf("%.5f\r\n", result.classification[i].value);
     }
-
+    
+   
     if (result.classification[0].value > 0.7) {
-        ei_printf("Detected: %s\r\n", ei_classifier_inferencing_categories[0]);
-    } else if (result.classification[1].value) {
-        ei_printf("Detected: %s\r\n", ei_classifier_inferencing_categories[1]);
-    } else if (result.classification[2].value) {
-        ei_printf("Detected: %s\r\n", ei_classifier_inferencing_categories[2]);
+        ei_printf("Detected: circle\r\n");
+        setRed();
+    } else if (result.classification[1].value > 0.7) {
+        ei_printf("Detected: square\r\n");
+        setGreen();
+    } else if (result.classification[2].value > 0.7) {
+        ei_printf("Detected: triangle\r\n");
+        setBlue();
     } else {
-        ei_printf("Detected: unknown\r\n");
+        ei_printf("\nDetected: unknown\r\n");
+        setYellow();
     }
 
     // Print anomaly result (if it exists)
