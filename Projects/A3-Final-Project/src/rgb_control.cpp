@@ -5,6 +5,9 @@ void initiateRgb() {
     pinMode(LEDR, OUTPUT);
     pinMode(LEDG, OUTPUT);
     pinMode(LEDB, OUTPUT);
+    digitalWrite(LEDR, LOW);
+    digitalWrite(LEDG, LOW);
+    digitalWrite(LEDB, LOW);
 }
 
 void setRed() {
