@@ -123,13 +123,13 @@ const ei_object_detection_nms_config_t ei_object_detection_nms = {
     0.2f  /* NMS IOU threshold */
 };
 
-const ei_impulse_t impulse_539367_0 = {
-    .project_id = 539367,
+const ei_impulse_t impulse_545244_0 = {
+    .project_id = 545244,
     .project_owner = "Djordje Dimitrov",
-    .project_name = "CloudXplorers - Final Project",
+    .project_name = "CloudXplorers - Final Project v4",
     .impulse_id = 63,
     .impulse_name = "spectr-dense-01c",
-    .deploy_version = 6,
+    .deploy_version = 3,
 
     .nn_input_frame_size = 222,
     .raw_sample_count = 300,
@@ -170,7 +170,7 @@ const ei_impulse_t impulse_539367_0 = {
     .object_detection_nms = ei_object_detection_nms
 };
 
-ei_impulse_handle_t impulse_handle_539367_0 = ei_impulse_handle_t( &impulse_539367_0 );
-ei_impulse_handle_t& ei_default_impulse = impulse_handle_539367_0;
+ei_impulse_handle_t impulse_handle_545244_0 = ei_impulse_handle_t( &impulse_545244_0 );
+ei_impulse_handle_t& ei_default_impulse = impulse_handle_545244_0;
 
 #endif // _EI_CLASSIFIER_MODEL_METADATA_H_

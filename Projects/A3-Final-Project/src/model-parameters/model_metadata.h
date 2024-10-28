@@ -70,10 +70,10 @@
 #define EI_CLASSIFIER_DATATYPE_UINT8             3
 #define EI_CLASSIFIER_DATATYPE_INT8              9
 
-#define EI_CLASSIFIER_PROJECT_ID                 539367
+#define EI_CLASSIFIER_PROJECT_ID                 545244
 #define EI_CLASSIFIER_PROJECT_OWNER              "Djordje Dimitrov"
-#define EI_CLASSIFIER_PROJECT_NAME               "CloudXplorers - Final Project"
-#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     6
+#define EI_CLASSIFIER_PROJECT_NAME               "CloudXplorers - Final Project v4"
+#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     3
 #define EI_CLASSIFIER_NN_INPUT_FRAME_SIZE        222
 #define EI_CLASSIFIER_RAW_SAMPLE_COUNT           300
 #define EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME      6
@@ -135,7 +135,7 @@
 
 #define EI_STUDIO_VERSION_MAJOR             1
 #define EI_STUDIO_VERSION_MINOR             60
-#define EI_STUDIO_VERSION_PATCH             9
+#define EI_STUDIO_VERSION_PATCH             13
 
 #define EI_CLASSIFIER_HR_ENABLED            0
 
