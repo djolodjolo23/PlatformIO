@@ -1,56 +1,46 @@
-#include <Arduino_LSM9DS1.h>    
-#include "Streaming.h"          
+#include <Arduino_LSM9DS1.h>
+#include "Streaming.h"
 #include "SensorFusion.h"
-
-#define BUFFER_SIZE 5
 
 SF fusion;
 
+// Raw sensor data
 float gx, gy, gz, ax, ay, az, mx, my, mz;
+
+// Filtered sensor data variables
+float gx_filt = 0, gy_filt = 0, gz_filt = 0;
+float ax_filt = 0, ay_filt = 0, az_filt = 0;
+
+// Orientation angles
 float pitch, roll, yaw;
 float deltat;
 
-float pitchBuffer[BUFFER_SIZE]; 
-float rollBuffer[BUFFER_SIZE];
-float yawBuffer[BUFFER_SIZE];
+// Smoothing factor for low-pass filter
+const float alpha = 0.5f;  // Adjust between 0 (more smoothing) and 1 (less smoothing)
 
-int pitchIndex = 0;
-int rollIndex = 0;
-int yawIndex = 0;
+// Thresholds for detecting movements
+const float ROLL_NEUTRAL_ZONE = 2.0f;      // Degrees, adjust as needed
+const float PITCH_SPIKE_THRESHOLD = 15.0f; // Adjust as needed for pitch spikes
+const float YAW_SPIKE_THRESHOLD = 15.0f;   // Adjust as needed for yaw spikes
 
-void addToBuffer(float value, float* buffer, int& index) {
-  buffer[index] = value;
-  index = (index + 1) % BUFFER_SIZE;
-}
+// Buffers for storing recent orientation data
+const int BUFFER_SIZE = 8;
+float pitchBuffer[BUFFER_SIZE] = {0};
+float yawBuffer[BUFFER_SIZE] = {0};
+int bufferIndex = 0;
 
-void addValuesToBuffer(float pitch, float roll, float yaw) {
-  addToBuffer(pitch, pitchBuffer, pitchIndex);
-  addToBuffer(roll, rollBuffer, rollIndex);
-  addToBuffer(yaw, yawBuffer, yawIndex);
-}
+// Volume control state
+enum VolumeState {
+  VOLUME_NEUTRAL,
+  VOLUME_INCREASING,
+  VOLUME_DECREASING
+};
 
-int checkControl() {
-  float highestDifference = 0;
-  uint8_t controlling_num;
-  float pitchDifference = abs(pitchBuffer[0] - pitchBuffer[4]);
-  float rollDifference = abs(rollBuffer[0] - rollBuffer[4]);
-  float yawDifference = abs(yawBuffer[0] - yawBuffer[4]) ;
-  if (pitchDifference > highestDifference) {
-    highestDifference = pitchDifference;
-    controlling_num = 1;  
-  }
-  if (rollDifference > highestDifference) {
-    highestDifference = rollDifference;
-    controlling_num = 2;
-  }
-  if (yawDifference > highestDifference) {
-    highestDifference = yawDifference;
-    controlling_num = 3;
-  }
-  return controlling_num;
-}
+static VolumeState volumeState = VOLUME_NEUTRAL;
 
-#define EULER_DATA
+// Stabilization delay variables
+unsigned long lastActionTime = 0;
+const unsigned long STABILIZATION_DELAY = 1000; // milliseconds
 
 void setup() {
   Serial.begin(115200);
@@ -66,6 +56,12 @@ void setup() {
   } else {
     Serial.println("IMU initialized successfully");
   }
+
+  // Initialize buffers
+  for (int i = 0; i < BUFFER_SIZE; i++) {
+    pitchBuffer[i] = 0.0f;
+    yawBuffer[i] = 0.0f;
+  }
 }
 
 void loop() {
@@ -74,32 +70,82 @@ void loop() {
     IMU.readGyroscope(gx, gy, gz);
     IMU.readMagneticField(mx, my, mz);
 
+    // Convert gyroscope data from degrees/s to radians/s
     gx *= DEG_TO_RAD;
     gy *= DEG_TO_RAD;
     gz *= DEG_TO_RAD;
 
+    // Apply low-pass filter to accelerometer data
+    ax_filt = alpha * ax + (1.0f - alpha) * ax_filt;
+    ay_filt = alpha * ay + (1.0f - alpha) * ay_filt;
+    az_filt = alpha * az + (1.0f - alpha) * az_filt;
+
+    // Apply low-pass filter to gyroscope data
+    gx_filt = alpha * gx + (1.0f - alpha) * gx_filt;
+    gy_filt = alpha * gy + (1.0f - alpha) * gy_filt;
+    gz_filt = alpha * gz + (1.0f - alpha) * gz_filt;
+
     deltat = fusion.deltatUpdate();
-    //fusion.MadgwickUpdate(gx, gy, gz, ax, ay, az, mx, my, mz, deltat);
-    fusion.MahonyUpdate(gx, gy, gz, ax, ay, az, mx, my, mz, deltat);
+    //fusion.MadgwickUpdate(gx_filt, gy_filt, gz_filt, ax_filt, ay_filt, az_filt, mx, my, mz, deltat);
+    fusion.MahonyUpdate(gx_filt, gy_filt, gz_filt, ax_filt, ay_filt, az_filt, mx, my, mz, deltat);
 
     // Get orientation angles
     roll = fusion.getRoll();
     pitch = fusion.getPitch();
     yaw = fusion.getYaw();
 
-    addValuesToBuffer(pitch, roll, yaw);
+    // Update buffers with new data
+    pitchBuffer[bufferIndex] = pitch;
+    yawBuffer[bufferIndex] = yaw;
 
-    if (checkControl() == 1) {
-      Serial << "Pitch is controlling" << endl;
-    } else if (checkControl() == 2) {
-      Serial << "Roll is controlling" << endl;
-    } else if (checkControl() == 3) {
-      Serial << "Yaw is controlling" << endl;
+    unsigned long currentTime = millis();
+
+    // Roll detection for volume control with stabilization delay
+    if (roll > ROLL_NEUTRAL_ZONE) {
+      if (volumeState != VOLUME_INCREASING && (currentTime - lastActionTime > STABILIZATION_DELAY)) {
+        Serial.println("Start Increasing Volume");
+        volumeState = VOLUME_INCREASING;
+        lastActionTime = currentTime;
+        // Implement your volume increase logic here
+      }
+    } else if (roll < -ROLL_NEUTRAL_ZONE) {
+      if (volumeState != VOLUME_DECREASING && (currentTime - lastActionTime > STABILIZATION_DELAY)) {
+        Serial.println("Start Decreasing Volume");
+        volumeState = VOLUME_DECREASING;
+        lastActionTime = currentTime;
+        // Implement your volume decrease logic here
+      }
+    } else {
+      if (volumeState != VOLUME_NEUTRAL) {
+        Serial.println("Volume Control Neutral");
+        volumeState = VOLUME_NEUTRAL;
+        lastActionTime = currentTime;
+        // Optionally, implement logic when returning to neutral
+      }
     }
 
-    //#ifdef EULER_DATA
-      //Serial << "Pitch:\t" << pitch << "\t\tRoll:\t" << roll << "\t\tYaw:\t" << yaw << endl << endl;
-    //#endif
+    // Pitch spike detection
+    float pitchChange = pitch - pitchBuffer[(bufferIndex + 1) % BUFFER_SIZE];
+    if (abs(pitchChange) > PITCH_SPIKE_THRESHOLD ) {
+      // Implement a debounce mechanism if needed
+      Serial.println("Pitch Spike Detected");
+      // Implement your connection logic here
+    }
+
+    // Yaw spike detection
+    float yawChange = yaw - yawBuffer[(bufferIndex + 1) % BUFFER_SIZE];
+    if (abs(yawChange) > YAW_SPIKE_THRESHOLD) {
+      // Implement a debounce mechanism if needed
+      Serial.println("Yaw Spike Detected");
+      // Implement your color switching logic here
+    }
+
+    // Increment buffer index
+    bufferIndex = (bufferIndex + 1) % BUFFER_SIZE;
+
+    // Debug output (optional)
+    // Serial << "Pitch:\t" << pitch << "\tRoll:\t" << roll << "\tYaw:\t" << yaw << endl;
+
     delay(50); 
   }
 }
