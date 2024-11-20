@@ -1,0 +1,93 @@
+dependencies:
+  chmorgan/esp-libhelix-mp3:
+    component_hash: null
+    source:
+      path: /home/dj/Documents/Developing-IoT-Projects-with-ESP32-2nd-edition-main-new/components/chmorgan__esp-libhelix-mp3
+      type: local
+    version: 1.0.3
+  espressif/button:
+    component_hash: null
+    source:
+      path: /home/dj/Documents/Developing-IoT-Projects-with-ESP32-2nd-edition-main-new/components/espressif__button
+      type: local
+    version: 3.2.1
+  espressif/cmake_utilities:
+    component_hash: 351350613ceafba240b761b4ea991e0f231ac7a9f59a9ee901f751bddc0bb18f
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 0.5.3
+  espressif/esp-box:
+    component_hash: null
+    source:
+      path: /home/dj/Documents/Developing-IoT-Projects-with-ESP32-2nd-edition-main-new/components/espressif__esp-box
+      type: local
+    version: 3.1.0
+  espressif/esp-box-3:
+    component_hash: null
+    source:
+      path: /home/dj/Documents/Developing-IoT-Projects-with-ESP32-2nd-edition-main-new/components/espressif__esp-box-3
+      type: local
+    version: 1.2.0
+  espressif/esp-box-lite:
+    component_hash: null
+    source:
+      path: /home/dj/Documents/Developing-IoT-Projects-with-ESP32-2nd-edition-main-new/components/espressif__esp-box-lite
+      type: local
+    version: 2.1.0
+  espressif/esp_codec_dev:
+    component_hash: af363202469b2bbecc87f3268729adf37c18c886eba55cab4c268cc9be25b6af
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.3.2
+  espressif/esp_lcd_ili9341:
+    component_hash: 31f1b793aa2110dd2ae071c21ccbff0a4eb20d9a4ee40b6294c0dc0ad9552c4e
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.2.0
+  espressif/esp_lcd_touch:
+    component_hash: null
+    source:
+      path: /home/dj/Documents/Developing-IoT-Projects-with-ESP32-2nd-edition-main-new/components/espressif__esp_lcd_touch
+      type: local
+    version: 1.1.2
+  espressif/esp_lcd_touch_gt911:
+    component_hash: f90c3f82f052d1ccdfd71895a062f396ccc1c90ec69d8a99c483180387230bac
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.1.1~1
+  espressif/esp_lcd_touch_tt21100:
+    component_hash: 320b0c047223ee744e258648e0dc7035e8ec54fcffea9dcd81063c1bafa8d0a7
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.1.0~1
+  espressif/esp_lvgl_port:
+    component_hash: ff682937ac7f94653e45719f888db637830e90dd0ba3ff5b72d2c808c7a93949
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 2.4.1
+  espressif/icm42670:
+    component_hash: 3327870e7a125e7278f318297726138278f0cda2898f2461c01af0423d4afcda
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 1.0.0
+  idf:
+    component_hash: null
+    source:
+      type: idf
+    version: 5.3.1
+  lvgl/lvgl:
+    component_hash: 2409fdc84e9766d2a18afd84b051aef3f838348136cdb1c10ac2e8bcdb012bf6
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 9.2.0
+manifest_hash: fa98f8fdfb37d854d0e75186d0bae5ebae515ba8eaf5ec63871f01bd2598830c
+target: esp32s3
+version: 1.0.0

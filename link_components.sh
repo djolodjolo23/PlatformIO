@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COMPONENTS_PATH="/home/dj/Documents/PlatformIO/esp-idf-lib/components" 
+COMPONENTS_PATH="/home/dj/Documents/esp-idf-lib/components" 
 
 if [ -z "$1" ]; then
     echo "Usage: ./link_components.sh <path/to/lib>"

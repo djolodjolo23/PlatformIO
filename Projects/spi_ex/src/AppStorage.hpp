@@ -39,7 +39,8 @@ namespace app {
                 esp_vfs_fat_mount_config_t mount_config = {
                     .format_if_mount_failed = true,
                     .max_files = 5,
-                    .allocation_unit_size = 16 * 1024};
+                    .allocation_unit_size = 16 * 1024
+                    };
 
                 spi_bus_config_t bus_cfg = {
                     .mosi_io_num = PIN_NUM_MOSI,
@@ -47,7 +48,8 @@ namespace app {
                     .sclk_io_num = PIN_NUM_CLK,
                     .quadwp_io_num = -1,
                     .quadhd_io_num = -1,
-                    .max_transfer_sz = 4000};
+                    .max_transfer_sz = 4000
+                    };
                 
                 
                 sdmmc_host_t host = SDSPI_HOST_DEFAULT();
