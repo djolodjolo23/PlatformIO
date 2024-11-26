@@ -8,9 +8,10 @@
 
 
 int counter = 0;
-int pinStatus;
 
 uint8_t arr[3] = {0, 1, 2};
+static bool lastButtonState = HIGH;
+
 
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
@@ -25,7 +26,6 @@ void setup() {
 }
 
 void loop() {
-  static bool lastButtonState = HIGH;
   bool buttonState = digitalRead(BUTTON_PIN);
   if (buttonState == LOW && lastButtonState == HIGH) {
     delay(50); 

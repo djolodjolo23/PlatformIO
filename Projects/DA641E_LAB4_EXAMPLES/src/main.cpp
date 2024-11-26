@@ -29,9 +29,10 @@ void loop() {
 }
 */
 
-/*
 
-int motorPin = 4; // change this to whatever pin you chose
+
+#define motorPin 2
+
 void setup() {
   pinMode(motorPin, OUTPUT);
 }
@@ -43,7 +44,7 @@ void loop() {
   delay(1000);                   // wait for a second
 }
 
-*/
+
 
 /*
 // LED_PIN refers to the pin where the LED ring is connected to, D2 corresponds to 25
@@ -82,57 +83,3 @@ void setRingRed(bool off) {
 // EXERCISE 1
 //Using the button as input, make a system that changes between different modes of light using the LED ring.
 //Make use of functions to help yourself for future uses of similar code.
-
-#define BUTTON_PIN 5
-#define LED_PIN 25
-#define LED_COUNT 24
-
-
-int counter = 0;
-int pinStatus;
-
-uint8_t arr[3] = {0, 1, 2};
-
-Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
-
-void setCurrentColour(int col);
-
-void setup() {
-  Serial.begin(9600);
-  strip.begin();
-  strip.show();
-  strip.setBrightness(30);
-  pinMode(BUTTON_PIN, INPUT_PULLUP);
-}
-
-void loop() {
-  static bool lastButtonState = HIGH;
-  bool buttonState = digitalRead(BUTTON_PIN);
-  if (buttonState == LOW && lastButtonState == HIGH) {
-    delay(50); 
-    counter = (counter + 1) % 3;      
-    setCurrentColour(arr[counter]);   
-  }
-
-  lastButtonState = buttonState;      
-  Serial.println(lastButtonState);
-}
-
-
-void setCurrentColour(int col) {
-    int red = (col == 0) ? 255 : 0;
-    int green = (col == 2) ? 255 : 0;
-    int blue = (col == 1) ? 255 : 0;
-
-    for (int i = 0; i < strip.numPixels(); i++) {
-        strip.setPixelColor(i, strip.Color(red, green, blue));
-    }
-    strip.show();
-}
-
-void setWhite() {
-  for (int i = 0; i < strip.numPixels(); i++) {
-    strip.setPixelColor(i, strip.Color(255, 255, 255));
-  }
-  strip.show();
-}
