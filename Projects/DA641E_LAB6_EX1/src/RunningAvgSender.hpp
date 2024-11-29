@@ -5,15 +5,15 @@ class RunningAvgSender {
 
     private:
         static constexpr int avgSize = 10; 
-        float avgBuffer1[avgSize];
-        float avgBuffer2[avgSize];
+        float avgBufferX[avgSize];
+        float avgBufferY[avgSize];
+        int avgIndex = 0;
 
         float avgX = 0;
         float avgY = 0;
         float rawX = 0;
         float rawY = 0;
 
-        int avgSize = 10; 
         float* xRaw;
         float* yRaw;
         float* xFiltered;
@@ -29,21 +29,23 @@ class RunningAvgSender {
         }
 
         void calculateRawAndAvg() {
-            avgX = 0;
-            avgY = 0;
+
+            avgBufferX[avgIndex] = analogRead(A0);
+            avgBufferY[avgIndex] = analogRead(A1);
+            avgIndex = (avgIndex + 1) % avgSize;
+
             for (int i = 0; i < avgSize; i++) {
-                float val1 = analogRead(A0);
-                float val2 = analogRead(A1);
-                avgX += val1;
-                avgY += val2;
-                delay(1); 
+                avgX += avgBufferX[i];
+                avgY += avgBufferY[i];
                 if (i == 5) {
-                    rawX = val1;
-                    rawY = val2;
+                    rawX = avgBufferX[i];
+                    rawY = avgBufferY[i];
                 }
             }
+
             avgX /= avgSize;
             avgY /= avgSize;
+            
         }
 
         void fillUpBuffers() {

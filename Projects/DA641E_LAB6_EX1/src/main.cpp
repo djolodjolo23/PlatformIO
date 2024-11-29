@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <AvgSender.hpp> 
+#include <RunningAvgSender.hpp>
 
 
 const int intervalMs = 100;
@@ -10,11 +11,13 @@ const int samples = (durationSeconds * 1000) / intervalMs;
 float xRaw[samples], yRaw[samples];
 float xFiltered[samples], yFiltered[samples];
 
-AvgSender* avgSender;
+//AvgSender* avgSender;
+RunningAvgSender* runningAvgSender;
 
 void setup() {
   Serial.begin(115200);
-  avgSender = new AvgSender(xRaw, yRaw, xFiltered, yFiltered, samples, intervalMs);
+  //avgSender = new AvgSender(xRaw, yRaw, xFiltered, yFiltered, samples, intervalMs);
+  runningAvgSender = new RunningAvgSender(xRaw, yRaw, xFiltered, yFiltered, samples, intervalMs);
 }
 
 void loop() {
@@ -25,7 +28,7 @@ void loop() {
   delay(1000);
   Serial.println("1...");
   delay(1000);
-  avgSender->fillUpBuffers();
-  avgSender->print();
+  runningAvgSender->fillUpBuffers();
+  runningAvgSender->print();
   while(1);
 }
