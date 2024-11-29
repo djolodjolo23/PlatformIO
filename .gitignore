@@ -1,4 +1,6 @@
 **/.pio/
 **/.vscode/
 ../build/
+**/venv/
+../venv/
 

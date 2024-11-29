@@ -4,7 +4,7 @@
 #include <ExpMovAvgSender.hpp>
 
 
-const int intervalMs = 100;
+const int intervalMs = 20;
 const int durationSeconds = 3;
 const int samples = (durationSeconds * 1000) / intervalMs;
 
@@ -35,5 +35,6 @@ void loop() {
   Serial.println("Go!");
   expMovAvgSender->fillUpBuffers();
   expMovAvgSender->print();
+  Serial.println("Done!");
   while(1);
 }
