@@ -79,6 +79,7 @@ void vibrate(unsigned long currentMillis) {
   }
   if (vibrationStep == 1) { 
     int intensity = (currentMillis - vibrationMillis) / 10 * 5; 
+    Serial.println(currentMillis);
     if (intensity >= 255) {
       intensity = 255;
       vibrationStep = 2; 
@@ -88,6 +89,7 @@ void vibrate(unsigned long currentMillis) {
   }
   if (vibrationStep == 2) { 
     int intensity = 255 - (currentMillis - vibrationMillis) / 10 * 5; 
+    Serial.println(currentMillis);
     if (intensity <= 40) {
       intensity = 40;
       vibrationStep = 0; 
