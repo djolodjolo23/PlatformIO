@@ -9,8 +9,8 @@ class Display {
 private:
     U8G2 &u8g2; 
     Joystick &joystick;
-    String menuItems[5] = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-    String subMenuItems[3] = { "Sub Item 1", "Sub Item 2", "Sub Item 3" };
+    String menuItems[5] = { "Cevapi", "Sarma", "Pljeskavica", "Karadjordjeva", "Gibanica" };
+    String subMenuItems[3] = { "Kajmak", "Ajvar", "Crni Luk" };
     int currentMenuItem = 0;
     bool logoDisplayed = false;
 

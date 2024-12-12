@@ -1,32 +1,147 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
+#include <WebSockets2_Generic.h>
+#include "defines.h"
 
-// D2 corresponds to 25
-#define LED_PIN 25
+const char* websockets_server_host = "ws://l  ocalhost:8081"; //Enter server address
+//const char* websockets_server_host = "serverip_or_name"; //Enter server address
 
-// how many LEDs there are in the ring
-#define LED_COUNT 24
+const uint16_t websockets_server_port = 8081; // Enter server port
 
-Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
+int status = WL_IDLE_STATUS;
 
-void setup() {
-  strip.begin();
-  strip.show();
-  strip.setBrightness(50);
+using namespace websockets2_generic;
+
+WebsocketsClient client;
+
+void onEventsCallback(WebsocketsEvent event, String data)
+{
+  (void) data;
+
+  if (event == WebsocketsEvent::ConnectionOpened)
+  {
+    Serial.println("Connnection Opened");
+  }
+  else if (event == WebsocketsEvent::ConnectionClosed)
+  {
+    Serial.println("Connnection Closed");
+  }
+  else if (event == WebsocketsEvent::GotPing)
+  {
+    Serial.println("Got a Ping!");
+  }
+  else if (event == WebsocketsEvent::GotPong)
+  {
+    Serial.println("Got a Pong!");
+  }
 }
 
-void loop() {
-  // Theater-marquee-style chasing lights.
-  uint32_t color = strip.Color(0, 0, 255);
-  for (int a = 0; a < 10; a++) {   // Repeat 10 times...
-    for (int b = 0; b < 3; b++) {  //  'b' counts from 0 to 2...
-      strip.clear();               //   Set all pixels in RAM to 0 (off)
-      // 'c' counts up from 'b' to end of strip in steps of 3...
-      for (int c = b; c < strip.numPixels(); c += 3) {
-        strip.setPixelColor(c, color);  // Set pixel 'c' to value 'color'
-      }
-      strip.show();  // Update strip with new contents
-      delay(50);     // Pause for a moment
-    }
+void printWifiStatus()
+{
+  // print the SSID of the network you're attached to:
+  Serial.print("SSID: ");
+  Serial.println(WiFi.SSID());
+
+  // print your board's IP address:
+  IPAddress ip = WiFi.localIP();
+  Serial.print("Local IP Address: ");
+  Serial.println(ip);
+}
+
+void setup()
+{
+  Serial.begin(115200);
+
+  while (!Serial && millis() < 5000);
+
+  Serial.println("\nStarting RP2040W-RepeatingClient on " + String(BOARD_NAME));
+  Serial.println(WEBSOCKETS2_GENERIC_VERSION);
+
+  ///////////////////////////////////
+
+  // check for the WiFi module:
+  if (WiFi.status() == WL_NO_MODULE)
+  {
+    Serial.println("Communication with WiFi module failed!");
+
+    // don't continue
+    while (true);
+  }
+
+  Serial.print(F("Connecting to SSID: "));
+  Serial.println(ssid);
+
+  status = WiFi.begin(ssid, pass);
+
+  delay(1000);
+
+  // attempt to connect to WiFi network
+  while ( status != WL_CONNECTED)
+  {
+    delay(500);
+
+    // Connect to WPA/WPA2 network
+    status = WiFi.status();
+  }
+
+  printWifiStatus();
+
+  ///////////////////////////////////
+
+  Serial.print("Connecting to WebSockets Server @");
+  Serial.println(websockets_server_host);
+
+  // run callback when messages are received
+  client.onMessage([&](WebsocketsMessage message)
+  {
+    Serial.print("Got Message: ");
+    Serial.println(message.data());
+  });
+
+  // run callback when events are occuring
+  client.onEvent(onEventsCallback);
+}
+
+void sendMessage()
+{
+  // try to connect to Websockets server
+  bool connected = client.connect(websockets_server_host, websockets_server_port, "/");
+
+  if (connected)
+  {
+    Serial.println("Connected!");
+
+    String WS_msg = String("Hello to Server from ") + BOARD_NAME;
+    client.send(WS_msg);
+  }
+  else
+  {
+    Serial.println("Not Connected!");
+  }
+}
+
+void checkToSendMessage()
+{
+#define REPEAT_INTERVAL    10000L
+
+  static unsigned long checkstatus_timeout = 1000;
+
+  // Send WebSockets message every REPEAT_INTERVAL (10) seconds.
+  if (millis() > checkstatus_timeout)
+  {
+    sendMessage();
+    checkstatus_timeout = millis() + REPEAT_INTERVAL;
+  }
+}
+
+void loop()
+{
+
+  checkToSendMessage();
+
+  // let the websockets client check for incoming messages
+  if (client.available())
+  {
+    client.poll();
   }
 }
